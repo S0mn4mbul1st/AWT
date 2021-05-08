@@ -1,5 +1,6 @@
 from django import forms
 
+
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
     ('P', 'PayPal')
@@ -14,7 +15,6 @@ class CheckoutForm(forms.Form):
 
     billing_address = forms.CharField(required=False)
     billing_address2 = forms.CharField(required=False)
-
     billing_zip = forms.CharField(required=False)
 
     same_billing_address = forms.BooleanField(required=False)
