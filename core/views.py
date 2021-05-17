@@ -131,7 +131,7 @@ class CheckoutView(View):
                     'same_billing_address')
 
                 if same_billing_address:
-                    billing_address = shipping_address
+                    billing_address = order.shipping_address
                     billing_address.pk = None
                     billing_address.save()
                     billing_address.address_type = 'B'
@@ -210,7 +210,6 @@ class PaymentView(View):
             context = {
                 'order': order,
                 'DISPLAY_COUPON_FORM': False,
-                'STRIPE_PUBLIC_KEY' : settings.STRIPE_PUBLIC_KEY
             }
             userprofile = self.request.user.userprofile
             if userprofile.one_click_purchasing:

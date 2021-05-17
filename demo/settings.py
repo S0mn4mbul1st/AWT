@@ -1,5 +1,5 @@
 import os
-
+from decouple import config
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 DEBUG = True
@@ -14,13 +14,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django_countries',
     'django.contrib.sites',
     
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'six',
 
     'core',
     'crispy_forms',
@@ -61,9 +62,9 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_files')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static_in_env')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DATABASES = {

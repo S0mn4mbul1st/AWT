@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
+from django_countries.fields import CountryField
 
 
 CATEGORY_CHOICES = (
@@ -136,6 +137,7 @@ class Address(models.Model):
                              on_delete=models.CASCADE)
     street_address = models.CharField(max_length=100)
     apartment_address = models.CharField(max_length=100)
+    country = CountryField(multiple=False)
     zip = models.CharField(max_length=100)
     address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
     default = models.BooleanField(default=False)
