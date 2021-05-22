@@ -8,8 +8,8 @@ from .views import (
     add_to_cart,
     remove_from_cart,
     remove_single_item_from_cart,
-    PaymentView,
-    RequestRefundView
+    RequestRefundView,
+    PaymentView
 )
 
 app_name = 'core'

@@ -7,7 +7,13 @@ def make_refund_accepted(modeladmin, request, queryset):
     queryset.update(refund_requested=False, refund_granted=True)
 
 
-make_refund_accepted.short_description = 'Update orders to refund granted'
+make_refund_accepted.short_description = 'Update order(s) to refund granted'
+
+def make_refund_refused(modeladmin, request, queryset):
+    queryset.update(refund_requested=True, refund_granted=False)
+
+
+make_refund_refused.short_description = 'Update order(s) to refund refused'
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -35,10 +41,10 @@ class OrderAdmin(admin.ModelAdmin):
                    'refund_requested',
                    'refund_granted']
     search_fields = [
-        'user__username',
-        'ref_code'
+        'ref_code',
+        'user__username'
     ]
-    actions = [make_refund_accepted]
+    actions = [make_refund_accepted,make_refund_refused]
 
 
 class AddressAdmin(admin.ModelAdmin):
