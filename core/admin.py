@@ -9,6 +9,7 @@ def make_refund_accepted(modeladmin, request, queryset):
 
 make_refund_accepted.short_description = 'Update order(s) to refund granted'
 
+
 def make_refund_refused(modeladmin, request, queryset):
     queryset.update(refund_requested=True, refund_granted=False)
 
@@ -44,7 +45,7 @@ class OrderAdmin(admin.ModelAdmin):
         'ref_code',
         'user__username'
     ]
-    actions = [make_refund_accepted,make_refund_refused]
+    actions = [make_refund_accepted, make_refund_refused]
 
 
 class AddressAdmin(admin.ModelAdmin):
@@ -52,11 +53,12 @@ class AddressAdmin(admin.ModelAdmin):
         'user',
         'street_address',
         'apartment_address',
+        'country',
         'zip',
         'address_type',
         'default'
     ]
-    list_filter = ['default', 'address_type']
+    list_filter = ['default', 'address_type', 'country']
     search_fields = ['user', 'street_address', 'apartment_address', 'zip']
 
 

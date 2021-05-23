@@ -15,6 +15,8 @@ from django.views.generic import ListView, DetailView, View
 from .forms import CheckoutForm, CouponForm, RefundForm, PaymentForm
 from .models import Item, OrderItem, Order, Address, Payment, Coupon, Refund, UserProfile
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
@@ -75,10 +77,9 @@ class CheckoutView(View):
             order = Order.objects.get(user=self.request.user, ordered=False)
             if form.is_valid():
 
-                use_default_shipping = form.cleaned_data.get(
-                    'use_default_shipping')
+                use_default_shipping = form.cleaned_data.get('use_default_shipping')
                 if use_default_shipping:
-                    print("Using the defualt shipping address")
+                    print("Using the default shipping address")
                     address_qs = Address.objects.filter(
                         user=self.request.user,
                         address_type='S',
@@ -94,12 +95,9 @@ class CheckoutView(View):
                         return redirect('core:checkout')
                 else:
                     print("User is entering a new shipping address")
-                    shipping_address1 = form.cleaned_data.get(
-                        'shipping_address')
-                    shipping_address2 = form.cleaned_data.get(
-                        'shipping_address2')
-                    shipping_country = form.cleaned_data.get(
-                        'shipping_country')
+                    shipping_address1 = form.cleaned_data.get('shipping_address')
+                    shipping_address2 = form.cleaned_data.get('shipping_address2')
+                    shipping_country = form.cleaned_data.get('shipping_country')
                     shipping_zip = form.cleaned_data.get('shipping_zip')
 
                     if is_valid_form([shipping_address1, shipping_country, shipping_zip]):
@@ -123,8 +121,7 @@ class CheckoutView(View):
                             shipping_address.save()
 
                     else:
-                        messages.info(
-                            self.request, "Please fill in the required shipping address fields")
+                        messages.info(self.request, "Please fill in the required shipping address fields")
 
                 use_default_billing = form.cleaned_data.get(
                     'use_default_billing')
@@ -132,7 +129,7 @@ class CheckoutView(View):
                     'same_billing_address')
 
                 if same_billing_address:
-                    billing_address = order.shipping_address
+                    billing_address = shipping_address
                     billing_address.pk = None
                     billing_address.save()
                     billing_address.address_type = 'B'
@@ -141,7 +138,7 @@ class CheckoutView(View):
                     order.save()
 
                 elif use_default_billing:
-                    print("Using the defualt billing address")
+                    print("Using the default billing address")
                     address_qs = Address.objects.filter(
                         user=self.request.user,
                         address_type='B',
@@ -211,6 +208,7 @@ class PaymentView(View):
             context = {
                 'order': order,
                 'DISPLAY_COUPON_FORM': False,
+                'STRIPE_PUBLIC_KEY': settings.STRIPE_PUBLIC_KEY
             }
             userprofile = self.request.user.userprofile
             if userprofile.one_click_purchasing:
